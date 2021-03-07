@@ -187,3 +187,62 @@ function init() {
 }
 
 init();
+
+function myFunction() {
+      
+  var person = prompt("Please enter your room name:", "New Room");
+  if (person == null || person == "") {
+      
+  } 
+  else {
+      location.href = "http://iotharshad.s3-website-us-east-1.amazonaws.com/" + person;
+  }
+}
+
+
+function sendURL() {
+
+  var mailID = prompt("Please enter guest mail id:", "harshad.sahu@quovantis.com");
+  if (mailID == null || mailID == "") {
+      
+  } 
+
+  else{
+          // Amazon SES configuration
+      const SESConfig = {
+          apiVersion: '2010-12-01',
+          accessKeyId: 'AKIAXFP7VT2F6ROYCP4Q',
+          secretAccessKey: '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',
+          region: 'us-east-1'
+      };
+
+
+      var params = {
+          Source: 'harshadsahu17@gmail.com',
+          Destination: {
+          ToAddresses: [
+              mailID
+          ]
+          },
+          ReplyToAddresses: [
+          'harshadsahu17@gmail.com',
+          ],
+          Message: {
+          Body: {
+              Html: {
+              Charset: "UTF-8",
+              Data: window.location.href
+              }
+          },
+          Subject: {
+              Charset: 'UTF-8',
+              Data: 'Invite for chat room'
+          }
+          }
+      };
+      
+      new AWS.SES(SESConfig).sendEmail(params).promise().then((res) => {
+          console.log(res);
+      });
+}
+}

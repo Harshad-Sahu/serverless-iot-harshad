@@ -66,6 +66,12 @@ const htmlContent = `
                     </div>
             </div>
         </div>
+        <div class="col-sm-2">
+        <button  id="myButton" onclick="myFunction()" class="btn btn-primary mb-1">Add Room</button>
+        </div>
+        <div class="col-sm-2">
+        <button  id="myButton2" onclick="sendURL()" class="btn btn-primary mb-1">Invite User</button>
+    </div>
     </form>
 </div>
 `;
@@ -248,4 +254,62 @@ function processHttpRequest(req, callback) {
     };
     console.log("response: " + JSON.stringify(response));
     callback(null, response);
+}
+
+function myFunction() {
+      
+    var person = prompt("Please enter your room name:", "New Room");
+    if (person == null || person == "") {
+        
+    } 
+    else {
+        location.href = window.location.href + person;
+    }
+}
+
+function sendURL() {
+
+    var mailID = prompt("Please enter guest mail id:", "harshad.sahu@quovantis.com");
+    if (mailID == null || mailID == "") {
+        
+    } 
+
+    else{
+            // Amazon SES configuration
+        const SESConfig = {
+            apiVersion: '2010-12-01',
+            accessKeyId: 'AKIAXFP7VT2F6ROYCP4Q',
+            secretAccessKey: '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',
+            region: 'us-east-1'
+        };
+
+
+        var params = {
+            Source: 'harshadsahu17@gmail.com',
+            Destination: {
+            ToAddresses: [
+                mailID
+            ]
+            },
+            ReplyToAddresses: [
+            'harshadsahu17@gmail.com',
+            ],
+            Message: {
+            Body: {
+                Html: {
+                Charset: "UTF-8",
+                Data: "Please Join chat by clicking this link. :)"+window.location.href
+                }
+            },
+            Subject: {
+                Charset: 'UTF-8',
+                Data: 'Invite for chat room'
+            }
+            }
+        };
+        
+        new AWS.SES(SESConfig).sendEmail(params).promise().then((res) => {
+            console.log(res);
+        });
+ }
 }
