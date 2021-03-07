@@ -20,3 +20,4 @@ A script is provided, `deploy.sh` which uses AWS CloudFormation to provision all
 Once the AWS resources have been provisioned, the script will print a URL to visit in your browser to see the demo.
 
 NB: The Kinesis functionality has been disabled because it is billed per shard-hour. To enable it, edit `cloudformation/template.yaml` and uncomment the relevant lines before running `deploy.sh`.
+# IotChatHarshad
