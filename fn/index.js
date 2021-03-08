@@ -278,8 +278,8 @@ function sendURL() {
             // Amazon SES configuration
         const SESConfig = {
             apiVersion: '2010-12-01',
-            accessKeyId: 'AKIAXFP7VT2F6ROYCP4Q',
-            secretAccessKey: 'zLi8/k3rBvjGBh//d3jmoaHckMoGaw7Nu6EGFggo',
+            accessKeyId: 'Enter Your Access Key',
+            secretAccessKey: 'Enter Your Secret Key',
             region: 'us-east-1'
         };
 
