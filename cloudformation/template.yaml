@@ -245,6 +245,16 @@ Resources:
                   - comprehend:DetectDominantLanguage
                 Effect: Allow
                 Resource: ['*']
+              -
+                Action: dynamodb:*
+                Effect: Allow
+                Resource:
+                  - !GetAtt ChatTable.Arn
+              -
+                Action: ses:*
+                Effect: Allow
+                Resource: ['*']
+   
 # Uncomment to enable Kinesis
 #  ChatStream:
 #    Type: AWS::Kinesis::Stream

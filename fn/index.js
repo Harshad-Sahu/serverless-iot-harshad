@@ -37,23 +37,6 @@ const htmlContent = `
 <div id="messages" class="col-sm-12" style="max-height: 70%; overflow: auto;"></div>
 <div id="prompt" class="col-sm-12">
     <form role="form" id="lineForm" class="form-horizontal">
-            <div class="form-row">
-                <div id="translateBox" class="col-sm-12 mb-2 alert alert-primary">
-                  Translate to:
-                  <select id="target_lang" class="custom-select">
-                    <option value="en">🇬🇧</option>
-                    <option value="fr">🇫🇷</option>
-                    <option value="de">🇩🇪</option>
-                    <option value="it">🇮🇹</option>
-                    <option value="pt">🇵🇹</option>
-                    <option value="es">🇪🇸</option>
-                    <option value="ru">🇷🇺</option>
-                    <option value="he">🇮🇱</option>
-                    <option value="zh">🇨🇳</option>
-                    <option value="ja">🇯🇵</option>
-                  </select>
-                </div>
-            </div>
             <div class="form-row align-items-center">
                     <div class="col-sm-2">
                       <input type="text" class="form-control mb-1" id="user" placeholder="Your name">
@@ -66,11 +49,21 @@ const htmlContent = `
                     </div>
             </div>
         </div>
-        <div class="col-sm-2">
-        <button  id="myButton" onclick="myFunction()" class="btn btn-primary mb-1">Add Room</button>
+
+        <div class="form-row align-items-center">
+            <div class="col-sm-2">
+            <button  id="myButton" onclick="addRoom()" class="btn btn-primary mb-1">Add Room</button>
+            </div>
+            <div class="col-sm-2">
+            <button  id="myButton2" onclick="sendMail()" class="btn btn-primary mb-1">Invite User</button>
+            </div>
+            <div class="col-sm-2">
+            <button  id="myButton3" onclick="showRooms()" class="btn btn-primary mb-1">Show All Rooms</button>
+            </div>
         </div>
-        <div class="col-sm-2">
-        <button  id="myButton2" onclick="sendURL()" class="btn btn-primary mb-1">Invite User</button>
+    <div>
+    <p id="mylist">
+    </p>
     </div>
     </form>
 </div>
@@ -254,62 +247,4 @@ function processHttpRequest(req, callback) {
     };
     console.log("response: " + JSON.stringify(response));
     callback(null, response);
-}
-
-function myFunction() {
-      
-    var person = prompt("Please enter your room name:", "New Room");
-    if (person == null || person == "") {
-        
-    } 
-    else {
-        location.href = window.location.href + person;
-    }
-}
-
-function sendURL() {
-
-    var mailID = prompt("Please enter guest mail id:", "harshad.sahu@quovantis.com");
-    if (mailID == null || mailID == "") {
-        
-    } 
-
-    else{
-            // Amazon SES configuration
-        const SESConfig = {
-            apiVersion: '2010-12-01',
-            accessKeyId: 'Enter Your Access Key',
-            secretAccessKey: 'Enter Your Secret Key',
-            region: 'us-east-1'
-        };
-
-
-        var params = {
-            Source: 'harshadsahu17@gmail.com',
-            Destination: {
-            ToAddresses: [
-                mailID
-            ]
-            },
-            ReplyToAddresses: [
-            'harshadsahu17@gmail.com',
-            ],
-            Message: {
-            Body: {
-                Html: {
-                Charset: "UTF-8",
-                Data: "Please Join chat by clicking this link. :)"+window.location.href
-                }
-            },
-            Subject: {
-                Charset: 'UTF-8',
-                Data: 'Invite for chat room'
-            }
-            }
-        };
-        
-        new AWS.SES(SESConfig).sendEmail(params).promise().then((res) => {
-            console.log(res);
-        });
- }
 }

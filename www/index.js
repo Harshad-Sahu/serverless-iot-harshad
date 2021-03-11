@@ -1,8 +1,9 @@
+
 const AWS_REGION = '<AWS_REGION>';
 const AWS_IDENTITY_POOL_ID = '<AWS_IDENTITY_POOL_ID>';
 const AWS_IOT_ENDPOINT = '<AWS_IOT_ENDPOINT>';
 const APP_NAME = 'chat';
-
+// var Responses = require('./API_Responses');
 var store = {}; // To be used for "global" variables
 
 /**
@@ -172,9 +173,7 @@ function callScroll() {
 }
 
 function init() {
-
   // Initialize the Amazon Cognito credentials provider
-
   AWS.config.region = AWS_REGION; // Region
   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
     IdentityPoolId: AWS_IDENTITY_POOL_ID,
@@ -183,40 +182,21 @@ function init() {
   localStorage.clear();
   if (userName) localStorage[window.location.pathname] = userName;
   connectClient();
-
 }
-
 init();
 
-function myFunction() {
-      
-  var person = prompt("Please enter your room name:", "New Room");
-  if (person == null || person == "") {
-      
-  } 
+function addRoom() { 
+  var room = prompt("Please enter your room name:", "New Room");
+  if (room == null || room == "") {} 
   else {
-      location.href = "http://iotharshad.s3-website-us-east-1.amazonaws.com/" + person;
+      location.href = window.location.href + room;
   }
 }
 
-
-function sendURL() {
-
+function sendMail() {
   var mailID = prompt("Please enter guest mail id:", "harshad.sahu@quovantis.com");
-  if (mailID == null || mailID == "") {
-      
-  } 
-
+  if (mailID == null || mailID == "") {  } 
   else{
-          // Amazon SES configuration
-      const SESConfig = {
-          apiVersion: '2010-12-01',
-          accessKeyId: 'AKIAXFP7VT2F6ROYCP4Q',
-          secretAccessKey: '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',
-          region: 'us-east-1'
-      };
-
-
       var params = {
           Source: 'harshadsahu17@gmail.com',
           Destination: {
@@ -231,7 +211,7 @@ function sendURL() {
           Body: {
               Html: {
               Charset: "UTF-8",
-              Data: window.location.href
+              Data: "Please Join chat by clicking this link. :)"+window.location.href
               }
           },
           Subject: {
@@ -240,9 +220,39 @@ function sendURL() {
           }
           }
       };
-      
-      new AWS.SES(SESConfig).sendEmail(params).promise().then((res) => {
-          console.log(res);
-      });
+      // new AWS.SES(SESConfig).sendEmail(params).promise().then((res) => {
+      //     console.log(res);
+      // });
+      try {
+        console.log("check 123..........");
+         SES.sendEmail(params).promise();
+              // return Responses._200({});
+            
+    } catch (error) {
+        console.log('error sending email ', error);
+        // return Responses._400({ message: error });
+ 
+    }
 }
+}
+
+function showRooms()
+{
+  var docClient = new AWS.DynamoDB.DocumentClient();    
+  var table = 'chat';    
+  var params = {
+    TableName : table,
+    ProjectionExpression: "room"
+  };
+docClient.scan(params, function(err, data) {
+    if (err) {
+        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("We Get the data hurray...:", JSON.stringify(data.Items, null, 2));
+        data.Items.forEach(function(chat) {
+          console.log(chat.room);
+          document.getElementById("mylist").innerHTML +=  " </br>" + chat.room
+       });
+    }
+});
 }
