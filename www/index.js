@@ -1,4 +1,3 @@
-
 const AWS_REGION = '<AWS_REGION>';
 const AWS_IDENTITY_POOL_ID = '<AWS_IDENTITY_POOL_ID>';
 const AWS_IOT_ENDPOINT = '<AWS_IOT_ENDPOINT>';
@@ -193,48 +192,30 @@ function addRoom() {
   }
 }
 
-function sendMail() {
-  var mailID = prompt("Please enter guest mail id:", "harshad.sahu@quovantis.com");
-  if (mailID == null || mailID == "") {  } 
-  else{
-      var params = {
-          Source: 'harshadsahu17@gmail.com',
-          Destination: {
-          ToAddresses: [
-              mailID
-          ]
-          },
-          ReplyToAddresses: [
-          'harshadsahu17@gmail.com',
-          ],
-          Message: {
-          Body: {
-              Html: {
-              Charset: "UTF-8",
-              Data: "Please Join chat by clicking this link. :)"+window.location.href
-              }
-          },
-          Subject: {
-              Charset: 'UTF-8',
-              Data: 'Invite for chat room'
-          }
-          }
-      };
-      // new AWS.SES(SESConfig).sendEmail(params).promise().then((res) => {
-      //     console.log(res);
-      // });
-      try {
-        console.log("check 123..........");
-         SES.sendEmail(params).promise();
-              // return Responses._200({});
-            
-    } catch (error) {
-        console.log('error sending email ', error);
-        // return Responses._400({ message: error });
- 
-    }
+
+function sendMail()
+{
+  var mailID = window.prompt("Please enter guest mail id:", "harshad.sahu@quovantis.com");
+  // alert (mailID);
+  const data = { to: mailID };
+
+  fetch('https://ugb5oxa6wf.execute-api.us-east-1.amazonaws.com/dev/send-email', {            
+  method: 'POST', 
+  headers: {
+    'Access-Control-Request-Headers': '*',
+    'Access-Control-Request-Method': '*',
+  },
+  body: JSON.stringify(data),
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Success:', data);
+})
+.catch((error) => {
+  console.error('Error:', error);
+});
 }
-}
+
 
 function showRooms()
 {
